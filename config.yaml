@@ -1,0 +1,9 @@
+paths:
+  dataset: ./dataset/
+  model: ./models/generator.pt
+
+hypers:
+  batch_size: 100
+  epochs: 1
+  lr: 0.0002
+  z: 100

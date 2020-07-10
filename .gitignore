@@ -1,0 +1,16 @@
+.DS_Store
+.venv
+.vscode
+
+__pycache__
+
+input/**
+output/**
+artifacts/**
+data/
+dataset/
+runs/
+Columbia Gaze Data Set/**
+MNIST/
+
+!.gitkeep
