@@ -4,6 +4,8 @@ from torchvision import datasets, transforms
 from torch.utils.data import DataLoader, Dataset
 from torch import nn, optim
 from sys import exit as e
+import shutil
+import os
 
 from modules.gan import Discriminator, Generator
 import modules.util as util
@@ -14,13 +16,15 @@ from modules.util import Logger
 def mnist_data(out_dir):
   compose = transforms.Compose(
     [transforms.ToTensor(),
-    transforms.Normalize((0), (1))
+    transforms.Normalize((0.5), (0.5))
     ])
 
   return datasets.MNIST(root = out_dir, train = True, transform = compose, download = True)
 
 
 def train_gan(configs):
+  if os.path.isdir('./data'):
+    shutil.rmtree('./data/')
   logger = Logger(model_name='VGAN', data_name='MNIST')
   out_dir = configs['paths']['dataset']
   dataset = mnist_data(out_dir)
@@ -57,8 +61,8 @@ def train_gan(configs):
       d_loss = real_loss + fake_loss
 
       optimizer_g.zero_grad()
-      labels.fill_(1.0)
-      noise = torch.randn(b_size, configs['hypers']['z'])
+      labels = torch.full((b_size//2, ), 1, dtype = torch.float)
+      noise = torch.randn(b_size//2, configs['hypers']['z'])
       fake_data = generator(noise)
       output = discriminator(fake_data).squeeze()
       g_loss = criterion(output, labels)
